@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tostielotes para Gatitos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('imagenes/puesto.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            color: white;
+        }
+        
+        #game-container {
+            background: transparent;
+            padding: 20px;
+            width: 100%;
+            max-width: 1800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            height: 130vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .info-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .info-box {
+            font-size: 1.3rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        #score {
+            color: #FF6B6B;
+            font-size: 45px;
+            text-align: left;
+            position: relative;
+        }
+        
+        #timer {
+            color: #4CAF50;
+            text-align: left;
+            font-size: 45px;
+        }
+        
+        .top-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        #pause-btn, #music-btn {
+            background: rgba(255, 255, 255, 0.8);
+            color: #f33471;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 2.1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #pause-btn:hover, #music-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        #cats-area {
+            position: relative;
+            height: 230px;
+            margin-top: 100px;
+            z-index: 15;
+            overflow: hidden;
+        }
+        
+        #game-area {
+            display: flex;
+            flex: 1;
+            position: relative;
+        }
+        
+        #interaction-area {
+            display: flex;
+            flex: 1;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #plate-container {
+            position: absolute;
+            left: 50%;
+            top: 46%;
+            transform: translate(-66%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #plate {
+            width: 300px;
+            height: 200px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            padding: 45px;
+            font-size: 20;
+            backdrop-filter: blur(2px);
+            color: #333;
+            position: relative;
+            transition: all 0.3s;
+            background-image: url('imagenes/elote.png');
+            background-size: 160%;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        /* Estilos para cada combinación de ingredientes */
+        #plate.with-tostilocos {
+            background-image: url('imagenes/elote-tostilocos.png');
+        }
+        #plate.with-mantequilla {
+            background-image: url('imagenes/elote-mantequilla.png');
+        }
+        #plate.with-limon {
+            background-image: url('imagenes/elote.png');
+        }
+        #plate.with-chile {
+            background-image: url('imagenes/elote-chile.png');
+        }
+        #plate.with-queso {
+            background-image: url('imagenes/elote-queso.png');
+        }
+        #plate.with-mayonesa {
+            background-image: url('imagenes/elote-mayonesa.png');
+        }
+        #plate.with-queso.with-chile {
+            background-image: url('imagenes/elote-queso-chile.png');
+        }
+        #plate.with-queso.with-limon {
+            background-image: url('imagenes/elote-queso.png');
+        }
+        #plate.with-queso.with-mantequilla {
+            background-image: url('imagenes/elote-mantequilla-queso.png');
+        }
+        #plate.with-queso.with-mayonesa {
+            background-image: url('imagenes/elote-mayonesa-queso.png');
+        }
+        #plate.with-mayonesa.with-queso {
+            background-image: url('imagenes/elote-mayonesa-queso.png');
+        }
+        #plate.with-mayonesa.with-chile {
+            background-image: url('imagenes/elote-mayonesa-chile.png');
+        }
+        #plate.with-queso.with-tostilocos {
+            background-image: url('imagenes/elote-tostilocos.png');
+        }
+        #plate.with-mayonesa.with-tostilocos {
+            background-image: url('imagenes/elote-tostilocos.png');
+        }
+        #plate.with-limon.with-tostilocos {
+            background-image: url('imagenes/elote-tostilocos.png');
+        }
+        #plate.with-mantequilla.with-tostilocos {
+            background-image: url('imagenes/elote-tostilocos.png');
+        }
+        #plate.with-chile.with-tostilocos {
+            background-image: url('imagenes/elote-tostilocos.png');
+        }
+        #plate.with-mantequilla.with-mayonesa {
+            background-image: url('imagenes/elote-mayonesa-mantequilla.png');
+        }
+        #plate.with-mantequilla.with-chile {
+            background-image: url('imagenes/elote-mantequilla-chile.png');
+        }
+        #plate.with-mantequilla.with-limon {
+            background-image: url('imagenes/elote-mantequilla.png');
+        }
+        #plate.with-mantequilla.with-mayonesa {
+            background-image: url('imagenes/elote-mantequilla-mayonesa.png');
+        }
+        #plate.with-mantequilla.with-mayonesa.with-chile {
+            background-image: url('imagenes/elote-mayonesa-mantequilla-chile.png');
+        }
+        #plate.with-mantequilla.with-queso.with-chile {
+            background-image: url('imagenes/elote-mantequilla-queso-chile.png');
+        }
+        #plate.with-mantequilla.with-mayonesa.with-limon{
+            background-image: url('imagenes/elote-mantequilla-mayonesa.png');
+        }
+        #plate.with-mayonesa.with-queso.with-chile {
+            background-image: url('imagenes/elote-mayonesa-queso-chile.png');
+        }
+        #plate.with-mayonesa.with-queso.with-mantequilla {
+            background-image: url('imagenes/elote-mayonesa-mantequilla-queso.png');
+        }
+        #plate.with-mayonesa.with-queso.with-tostilocos {
+            background-image: url('imagenes/elote-tostilocos.png');
+        }
+        #plate.with-mantequilla.with-queso.with-tostilocos {
+            background-image: url('imagenes/elote-tostilocos.png');
+        }
+        #plate.with-mantequilla.with-chile.with-tostilocos {
+            background-image: url('imagenes/elote-tostilocos.png');
+        }
+        #plate.with-mantequilla.with-limon.with-tostilocos {
+            background-image: url('imagenes/elote-tostilocos.png');
+        }
+        #plate.with-mantequilla.with-mayonesa.with-tostilocos {
+            background-image: url('imagenes/elote-tostilocos.png');
+        }
+        #plate.with-limon.with-queso.with-tostilocos {
+            background-image: url('imagenes/elote-tostilocos.png');
+        }
+        #plate.with-mantequilla.with-queso {
+            background-image: url('imagenes/elote-mantequilla-queso.png');
+        }
+        
+        #plate.drag-over {
+            border: 2px dashed rgba(182, 77, 135, 1);
+        }
+        
+        #plate::before {
+            content: "¡Arrastra aquí los ingredientes!";
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 130%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        #plate.has-ingredients::before {
+            display: none;
+        }
+        
+        #ingredients-section {
+            position: absolute;
+            right: 299px;
+            top: 44%;
+            transform: translateY(-73%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        #ingredients-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 75px;
+            width: 610px;
+        }
+        
+        .ingredient {
+            width: 90px;
+            height: 90px;
+            cursor: grab;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s, opacity 0.2s;
+            overflow: hidden;
+        }
+        
+        .ingredient.dragging {
+            opacity: 10.5;
+            transform: scale(0.9);
+        }
+        
+        .ingredient.hidden {
+            visibility: hidden;
+        }
+        
+        .ingredient img {
+            width: 120%;
+            height: 120%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+        
+        .ingredient:hover {
+            transform: scale(1.1);
+        }
+        
+        #submit-btn {
+            background: linear-gradient(to bottom, rgba(76, 175, 80, 0.9), rgba(69, 160, 73, 0.9));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            border: 2px solid rgba(177, 11, 11, 0.5);
+            backdrop-filter: blur(2px);
+            width: 100%;
+            max-width: 200px;
+            margin-top: 20px;
+        }
+        
+        #submit-btn:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 12px rgba(0,0,0,0.3);
+        }
+        
+        .cat-with-order {
+            position: absolute;
+            top: 90%;
+            left: -20px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 20px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+        }
+        
+        .cat {
+            width: 5px;
+            height: 10px;
+            object-fit: contain;
+            transition: transform 10.3s ease;
+        }
+        
+        .speech-bubble {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 19px 40px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: relative;
+            min-width: 48px;
+            text-align: center;
+            font-size: 3.1rem;
+            font-weight: bold;
+            color: #0f0101;
+            border: 4px solid #FFD6E0;
+        }
+        
+        .speech-bubble:after {
+            position: absolute;
+            bottom: -12px;
+            left: 20%;
+            transform: translateX(-30%);
+            width: 0;
+            height: 0;
+            border-left: 22px solid transparent;
+            border-right: 22px solid transparent;
+            border-top: 11px solid rgba(255, 255, 255, 0.95);
+        }
+        
+        @keyframes catEnter {
+            from { left: -200px; }
+            to { left: calc(35% + (var(--cat-position) * 10%)); transform: translateY(-90%); }
+        }
+        
+        @keyframes catExit {
+            from { left: calc(30% + (var(--cat-position) * 20%)); transform: translateY(-90%); }
+            to { left: calc(100% + 200px); }
+        }
+        
+        .cat-enter {
+            animation: catEnter 0.5s forwards;
+        }
+        
+        .cat-exit {
+            animation: catExit 10.5s forwards;
+        }
+        
+        .cat-happy .cat {
+            transform: translateY(-90%) rotate(10deg) scale(1.1);
+        }
+        
+        .cat-angry .cat {
+            transform: translateY(-90%) rotate(-10deg) scale(1.1);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        #pause-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .pause-content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .pause-content h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .pause-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        
+        .pause-btn:hover {
+            background: #3e8e41;
+            transform: translateY(-2px);
+        }
+        
+        .plate-selector {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: 2px solid #FF6B6B;
+            z-index: 10;
+        }
+        
+        .money {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-image: url('imagenes/money.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 20;
+            animation: floatMoney 1s forwards;
+        }
+        
+        @keyframes floatMoney {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--target-x), var(--target-y)) scale(0.5);
+                opacity: 0;
+            }
+        }
+        
+        .money-burst {
+            position: absolute;
+            font-size: 1.5rem;
+            color: gold;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
+            animation: burst 0.8s forwards;
+            z-index: 30;
+        }
+        
+        @keyframes burst {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            #plate {
+                width: 350px;
+                height: 200px;
+            }
+            
+            .ingredient {
+                width: 110px;
+                height: 110px;
+            }
+            
+            #ingredients-section {
+                right: 30px;
+            }
+            
+            .cat {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .speech-bubble {
+                min-width: 200px;
+                font-size: 1.2rem;
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="top-bar">
+            <div class="info-container">
+                <div id="score" class="info-box" font-size="10">Puntos: 0</div>
+                <div id="timer" class="info-box">Tiempo: 60</div>
+            </div>
+            <div class="top-buttons">
+                <button id="music-btn">
+                    <span id="music-icon">🔊</span> Música
+                </button>
+                <button id="pause-btn">
+                    <span id="pause-icon">⏸</span> Pausa
+                </button>
+            </div>
+        </div>
+        
+        <div id="cats-area">
+            <!-- Los gatos se agregarán dinámicamente aquí -->
+        </div>
+        
+        <div id="game-area">
+            <div id="interaction-area">
+                <div id="plate-container">
+                    <div id="plate"></div>
+                </div>
+                
+                <div id="ingredients-section">
+                    <div id="ingredients-container">
+                        <!-- Ingredientes dinámicos -->
+                    </div>
+                    <button id="submit-btn">Entregar orden</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="pause-menu">
+        <div class="pause-content">
+            <h2>Juego en Pausa</h2>
+            <button id="resume-btn" class="pause-btn">Continuar</button>
+            <button id="restart-btn" class="pause-btn">Reiniciar Juego</button>
+        </div>
+    </div>
+
+    <script>
+        const ingredients = [
+            { name: "tostilocos", image: "imagenes/papas.png", class: "with-tostilocos" },
+            { name: "mantequilla", image: "imagenes/mantequilla.png", class: "with-mantequilla" },
+            { name: "limón", image: "imagenes/limon.png", class: "with-limon" },
+            { name: "chile", image: "imagenes/chile.png", class: "with-chile" },
+            { name: "queso", image: "imagenes/queso.png", class: "with-queso" },
+            { name: "mayonesa", image: "imagenes/mayonesa.png", class: "with-mayonesa" }
+        ];
+        
+        const catImages = {
+            normal: "imagenes/michi.png",
+            happy: "imagenes/happy.png",
+            angry: "imagenes/angry.png"
+        };
+
+        // Variables para los efectos de sonido
+        let backgroundMusic;
+        let isMusicPlaying = false;
+        const ingredientSound = new Audio('imagenes/select.mp3');
+        const catEnterSound = new Audio('imagenes/meow.mp3');
+        
+        // Configurar volúmenes
+        ingredientSound.volume = 0.7;
+        catEnterSound.volume = 0.7;
+
+        let activeCatIndex = 0;
+        let cats = [];
+        let plateIngredients = [];
+        let score = 0;
+        let timeLeft = 60;
+        let gameInterval;
+        let roundCount = 0;
+        let isPaused = false;
+        const scoreDisplay = document.getElementById("score");
+        const timerDisplay = document.getElementById("timer");
+        const plate = document.getElementById("plate");
+        const ingredientsContainer = document.getElementById("ingredients-container");
+        const submitBtn = document.getElementById("submit-btn");
+        const catsArea = document.getElementById("cats-area");
+        const pauseBtn = document.getElementById("pause-btn");
+        const pauseMenu = document.getElementById("pause-menu");
+        const resumeBtn = document.getElementById("resume-btn");
+        const restartBtn = document.getElementById("restart-btn");
+        const pauseIcon = document.getElementById("pause-icon");
+        const musicBtn = document.getElementById("music-btn");
+        const musicIcon = document.getElementById("music-icon");
+        let ingredientElements = {};
+
+        function initGame() {
+            roundCount = 0;
+            score = 0;
+            scoreDisplay.textContent = `Puntos: ${score}`;
+            resetPlate();
+            renderIngredients();
+            setupDragAndDrop();
+            submitBtn.addEventListener("click", checkOrder);
+            startTimer();
+            
+            backgroundMusic = new Audio('imagenes/musica.mp3');
+            backgroundMusic.loop = true;
+            backgroundMusic.volume = 0.5;
+            
+            pauseBtn.addEventListener("click", togglePause);
+            resumeBtn.addEventListener("click", togglePause);
+            restartBtn.addEventListener("click", restartGame);
+            musicBtn.addEventListener("click", toggleMusic);
+            
+            createNewCat();
+            setTimeout(() => createNewCat(), 3000);
+        }
+
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                backgroundMusic.pause();
+                musicIcon.textContent = "🔇";
+                musicBtn.querySelector("span").textContent = "🔇";
+            } else {
+                backgroundMusic.play();
+                musicIcon.textContent = "🔊";
+                musicBtn.querySelector("span").textContent = "🔊";
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        function startTimer() {
+            clearInterval(gameInterval);
+            timeLeft = 60;
+            timerDisplay.textContent = `Tiempo: ${timeLeft}`;
+            timerDisplay.style.color = "#4CAF50";
+            timerDisplay.style.animation = "none";
+            
+            gameInterval = setInterval(() => {
+                if(!isPaused) {
+                    timeLeft--;
+                    timerDisplay.textContent = `Tiempo: ${timeLeft}`;
+                    
+                    if(timeLeft <= 10) {
+                        timerDisplay.style.color = "#FF5252";
+                        timerDisplay.style.animation = "pulse 0.5s infinite";
+                    }
+                    
+                    if(timeLeft <= 0) {
+                        clearInterval(gameInterval);
+                        endGame();
+                    }
+                    
+                    if(timeLeft % Math.floor(Math.random() * 10 + 15) === 0 && cats.length < 4) {
+                        createNewCat();
+                    }
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            alert(`¡Tiempo terminado! Puntuación final: ${score}`);
+            initGame();
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            
+            if(isPaused) {
+                pauseMenu.style.display = "flex";
+                pauseIcon.textContent = "▶️";
+                pauseBtn.querySelector("span").textContent = "▶";
+                if(isMusicPlaying) backgroundMusic.pause();
+            } else {
+                pauseMenu.style.display = "none";
+                pauseIcon.textContent = "⏸";
+                pauseBtn.querySelector("span").textContent = "⏸";
+                if(isMusicPlaying) backgroundMusic.play();
+            }
+        }
+
+        function restartGame() {
+            togglePause();
+            catsArea.innerHTML = "";
+            cats = [];
+            initGame();
+        }
+
+        function createNewCat() {
+            if(cats.length >= 4) return;
+            
+            const catId = Date.now();
+            const catPosition = cats.length;
+            
+            const catElement = document.createElement("div");
+            catElement.className = "cat-with-order";
+            catElement.id = `cat-${catId}`;
+            catElement.style.setProperty('--cat-position', catPosition);
+            
+            const speechBubble = document.createElement("div");
+            speechBubble.className = "speech-bubble";
+            speechBubble.id = `order-text-${catId}`;
+            
+            const catImg = document.createElement("img");
+            catImg.className = "cat";
+            catImg.src = catImages.normal;
+            catImg.alt = "Gatito";
+            
+            const plateSelector = document.createElement("div");
+            plateSelector.className = "plate-selector";
+            plateSelector.textContent = "✓";
+            plateSelector.style.display = "none";
+            plateSelector.addEventListener("click", () => setActiveCat(catId));
+            
+            catElement.appendChild(speechBubble);
+            catElement.appendChild(catImg);
+            catElement.appendChild(plateSelector);
+            catsArea.appendChild(catElement);
+            
+            const newCat = {
+                id: catId,
+                element: catElement,
+                speechBubble: speechBubble,
+                catImg: catImg,
+                plateSelector: plateSelector,
+                order: [],
+                position: catPosition,
+                isActive: false
+            };
+            
+            cats.push(newCat);
+            generateOrder(newCat);
+            animateCatEnter(newCat);
+            
+            // Reproducir sonido de gato entrando
+            catEnterSound.currentTime = 0;
+            catEnterSound.play();
+            
+            if(cats.length === 1) {
+                setActiveCat(catId);
+            }
+        }
+
+        function setActiveCat(catId) {
+            cats.forEach(cat => {
+                cat.isActive = false;
+                cat.plateSelector.style.display = "none";
+                cat.element.style.zIndex = "1";
+            });
+            
+            const activeCat = cats.find(cat => cat.id === catId);
+            if(activeCat) {
+                activeCat.isActive = true;
+                activeCat.plateSelector.style.display = "flex";
+                activeCat.element.style.zIndex = "10";
+                activeCatIndex = cats.indexOf(activeCat);
+            }
+        }
+
+        function animateCatEnter(cat) {
+            cat.catImg.src = catImages.normal;
+            cat.element.classList.remove("cat-exit", "cat-happy", "cat-angry");
+            cat.element.classList.add("cat-enter");
+        }
+
+        function animateCatExit(cat, isHappy) {
+            cat.element.classList.remove("cat-enter");
+            if (isHappy) {
+                cat.catImg.src = catImages.happy;
+                cat.element.classList.add("cat-happy");
+            } else {
+                cat.catImg.src = catImages.angry;
+                cat.element.classList.add("cat-angry");
+            }
+            cat.element.classList.add("cat-exit");
+            
+            setTimeout(() => {
+                const index = cats.findIndex(c => c.id === cat.id);
+                if(index !== -1) {
+                    cats.splice(index, 1);
+                    cat.element.remove();
+                    
+                    if(activeCatIndex >= cats.length) {
+                        activeCatIndex = Math.max(0, cats.length - 1);
+                    }
+                    if(cats.length > 0) {
+                        setActiveCat(cats[activeCatIndex].id);
+                    }
+                }
+                
+                if(cats.length < 2) {
+                    setTimeout(() => createNewCat(), 2000);
+                }
+            }, 1000);
+        }
+
+        function createMoneyEffect(catElement) {
+            const catRect = catElement.getBoundingClientRect();
+            const scoreRect = scoreDisplay.getBoundingClientRect();
+            
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const money = document.createElement('div');
+                    money.className = 'money';
+                    
+                    const startX = catRect.left + catRect.width/2 - 15;
+                    const startY = catRect.top - 30;
+                    
+                    const endX = scoreRect.left + scoreRect.width/2 - window.scrollX;
+                    const endY = scoreRect.top + scoreRect.height/2 - window.scrollY;
+                    
+                    const diffX = endX - startX;
+                    const diffY = endY - startY;
+                    
+                    money.style.left = `${startX}px`;
+                    money.style.top = `${startY}px`;
+                    money.style.setProperty('--target-x', `${diffX}px`);
+                    money.style.setProperty('--target-y', `${diffY}px`);
+                    
+                    document.body.appendChild(money);
+                    
+                    setTimeout(() => {
+                        money.remove();
+                    }, 1000);
+                }, i * 100);
+            }
+            
+            setTimeout(() => {
+                const burst = document.createElement('div');
+                burst.className = 'money-burst';
+                burst.textContent = '+10';
+                
+                const scoreRect = scoreDisplay.getBoundingClientRect();
+                burst.style.left = `${scoreRect.right - 30}px`;
+                burst.style.top = `${scoreRect.top - 20}px`;
+                
+                document.body.appendChild(burst);
+                
+                setTimeout(() => {
+                    burst.remove();
+                }, 800);
+            }, 600);
+        }
+
+        function resetPlate() {
+            plate.innerHTML = "";
+            plateIngredients = [];
+            // Remover todas las clases de ingredientes
+            ingredients.forEach(ing => {
+                plate.classList.remove(ing.class);
+                // Mostrar nuevamente los ingredientes ocultos
+                if (ingredientElements[ing.name]) {
+                    ingredientElements[ing.name].classList.remove("hidden");
+                }
+            });
+            plate.classList.remove("has-ingredients");
+        }
+
+        function generateOrder(cat) {
+            cat.order = [];
+            const numIngredients = Math.floor(Math.random() * 3) + 2;
+            for (let i = 0; i < numIngredients; i++) {
+                const randomIngredient = ingredients[Math.floor(Math.random() * ingredients.length)];
+                if (!cat.order.includes(randomIngredient.name)) {
+                    cat.order.push(randomIngredient.name);
+                }
+            }
+            cat.speechBubble.textContent = `¡Quiero ${cat.order.join(", ")}!`;
+            roundCount++;
+        }
+
+        function renderIngredients() {
+            ingredientsContainer.innerHTML = "";
+            ingredientElements = {}; // Reiniciar el objeto de elementos
+            
+            ingredients.forEach(ing => {
+                const ingElement = document.createElement("div");
+                ingElement.className = "ingredient";
+                ingElement.setAttribute("data-name", ing.name);
+                ingElement.setAttribute("draggable", "true");
+                
+                const imgElement = document.createElement("img");
+                imgElement.src = ing.image;
+                imgElement.alt = ing.name;
+                imgElement.draggable = false;
+                
+                ingElement.appendChild(imgElement);
+                ingredientsContainer.appendChild(ingElement);
+                
+                // Guardar referencia al elemento del ingrediente
+                ingredientElements[ing.name] = ingElement;
+            });
+        }
+
+        function setupDragAndDrop() {
+            const ingredients = document.querySelectorAll(".ingredient");
+            
+            ingredients.forEach(ing => {
+                ing.addEventListener("dragstart", dragStart);
+                ing.addEventListener("dragend", dragEnd);
+            });
+
+            plate.addEventListener("dragover", dragOver);
+            plate.addEventListener("dragenter", dragEnter);
+            plate.addEventListener("dragleave", dragLeave);
+            plate.addEventListener("drop", drop);
+        }
+
+        function dragStart(e) {
+            if(!isPaused) {
+                e.dataTransfer.setData("text/plain", e.currentTarget.getAttribute("data-name"));
+                e.currentTarget.classList.add("dragging");
+            } else {
+                e.preventDefault();
+            }
+        }
+
+        function dragEnd(e) {
+            e.currentTarget.classList.remove("dragging");
+        }
+
+        function dragOver(e) {
+            if(!isPaused) {
+                e.preventDefault();
+            }
+        }
+
+        function dragEnter(e) {
+            if(!isPaused) {
+                e.preventDefault();
+                plate.classList.add("drag-over");
+            }
+        }
+
+        function dragLeave(e) {
+            plate.classList.remove("drag-over");
+        }
+
+        function drop(e) {
+            if(!isPaused) {
+                e.preventDefault();
+                e.stopPropagation();
+                plate.classList.remove("drag-over");
+                
+                const ingredientName = e.dataTransfer.getData("text/plain");
+                const ingredient = ingredients.find(ing => ing.name === ingredientName);
+                
+                if (ingredient && !plateIngredients.includes(ingredient.name)) {
+                    plateIngredients.push(ingredient.name);
+                    plate.classList.add("has-ingredients");
+                    
+                    // Agregar clase correspondiente al ingrediente
+                    plate.classList.add(ingredient.class);
+                    
+                    // Ocultar el ingrediente en el área de ingredientes
+                    if (ingredientElements[ingredient.name]) {
+                        ingredientElements[ingredient.name].classList.add("hidden");
+                    }
+                    
+                    // Reproducir sonido de ingrediente agregado
+                    ingredientSound.currentTime = 0;
+                    ingredientSound.play();
+                }
+            }
+        }
+
+        function checkOrder() {
+            if(!isPaused && cats.length > 0) {
+                const activeCat = cats.find(cat => cat.isActive);
+                if(!activeCat) return;
+                
+                const isCorrect = 
+                    plateIngredients.length === activeCat.order.length &&
+                    plateIngredients.every(ing => activeCat.order.includes(ing));
+
+                if (isCorrect) {
+                    score += 10;
+                    createMoneyEffect(activeCat.element);
+                    animateCatExit(activeCat, true);
+                } else {
+                    score = Math.max(0, score - 5);
+                    animateCatExit(activeCat, false);
+                }
+
+                scoreDisplay.textContent = `Puntos: ${score}`;
+                resetPlate();
+            }
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
